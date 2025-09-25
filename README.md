@@ -85,8 +85,6 @@ sequenceDiagram
 
 
 
-
-
 🔑 Login Request Flow (Credentials → JWT)
 
 User submits login request
