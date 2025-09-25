@@ -40,6 +40,7 @@ Flow diagram:
 
 ## 🔐 JWT Authentication Flow
 
+```mermaid
 sequenceDiagram
     participant U as User
     participant C as AuthController
@@ -50,15 +51,15 @@ sequenceDiagram
     participant S as SecuredEndpoint
 
     U->>C: POST /login (username, password)
-    C->>AM: UsernamePasswordAuthenticationToken
+    C->>AM: Create UsernamePasswordAuthenticationToken
     AM->>UDS: loadUserByUsername(username)
-    UDS->>DB: Fetch user (username, password, roles)
-    DB-->>UDS: Return user record
+    UDS->>DB: Fetch user details
+    DB-->>UDS: Return user (username, password, roles)
     UDS-->>AM: Return UserDetails
-    AM-->>C: Authentication success
-    C->>JWT: Generate JWT (username, roles)
-    JWT-->>C: JWT token
-    C-->>U: Return JWT in response
+    AM-->>C: Authentication successful
+    C->>JWT: Generate JWT with username & roles
+    JWT-->>C: Return JWT
+    C-->>U: Send JWT in response
 
     U->>S: Request with Authorization: Bearer <JWT>
     S->>JWT: Validate & parse token
