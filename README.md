@@ -3,7 +3,9 @@
 Authentication is the process of verifying the identity of a user, device, or system to ensure that access is granted only to authorized entities. This critical security step protects sensitive information, systems, and resources from unauthorized use or access.
 
 API Authentication includes secures data exchange between software applications using methods like API keys, OAuth tokens, or JSON Web Tokens (JWTs).
+
 JWT cotains : Base64(Header) + "." + Base64(Payload) + "." + Signature
+
 Example :
 JWT = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huX2RvZSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE2OTU5MDM2MDB9.R-3rT5YcJ9yTrCdfcP8uT3R-ABtU7Mv6dRkDp8q3Djs
 1st part = eyJhbGciOiJIUzI1NiJ9
