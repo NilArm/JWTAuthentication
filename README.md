@@ -40,47 +40,30 @@ Flow diagram:
 
 ## 🔐 JWT Authentication Flow
 
-```mermaid
 sequenceDiagram
-    participant U as User (Client)
+    participant U as User
     participant C as AuthController
     participant AM as AuthenticationManager
     participant UDS as UserDetailsService
-    participant P as PasswordEncoder (BCrypt)
-    participant J as JwtUtil
-    participant F as JwtFilter
-    participant S as Spring Security
-    participant H as HelloController (Protected API)
+    participant DB as Database
+    participant JWT as JwtUtil
+    participant S as SecuredEndpoint
 
-    %% --- LOGIN FLOW ---
-    U->>C: POST /auth/login (username, password)
-    C->>AM: authenticate(UsernamePasswordAuthenticationToken)
+    U->>C: POST /login (username, password)
+    C->>AM: UsernamePasswordAuthenticationToken
     AM->>UDS: loadUserByUsername(username)
-    UDS-->>AM: UserDetails (username, hashed password, roles)
-    AM->>P: match(raw password, hashed password)
-    P-->>AM: match = true/false
-    alt credentials valid
-        AM-->>C: Authentication (principal, roles)
-        C->>J: generateToken(username, roles)
-        J-->>C: JWT (signed with secret, exp, roles)
-        C-->>U: { "token": "eyJhbGciOi..." }
-    else invalid credentials
-        AM-->>C: AuthenticationException
-        C-->>U: 401 Unauthorized
-    end
+    UDS->>DB: Fetch user (username, password, roles)
+    DB-->>UDS: Return user record
+    UDS-->>AM: Return UserDetails
+    AM-->>C: Authentication success
+    C->>JWT: Generate JWT (username, roles)
+    JWT-->>C: JWT token
+    C-->>U: Return JWT in response
 
-    %% --- SUBSEQUENT REQUESTS WITH TOKEN ---
-    U->>F: GET /hello with "Authorization: Bearer <JWT>"
-    F->>J: validate(token), extract username & roles
-    alt token valid
-        J-->>F: username, roles
-        F->>S: SecurityContextHolder.setAuthentication()
-        S->>H: forward request (user authenticated)
-        H-->>U: Response (Hello user!)
-    else token invalid/expired
-        J-->>F: error
-        F-->>U: 403 Forbidden / 401 Unauthorized
-    end
+    U->>S: Request with Authorization: Bearer <JWT>
+    S->>JWT: Validate & parse token
+    JWT-->>S: Extract username & roles
+    S-->>U: Return secured resource
 
 
 
