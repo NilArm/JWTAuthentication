@@ -65,7 +65,7 @@ sequenceDiagram
     S->>JWT: Validate & parse token
     JWT-->>S: Extract username & roles
     S-->>U: Return secured resource
-
+```
 
 
 
