@@ -1,0 +1,6 @@
+server:
+  port: 8080
+
+jwt:
+  secret: "hZ3dQ8e1U2cP1x7m9v2K4qTg6bY0oN5rA1sF3uVwXzE="
+  expiration-ms: 3600000 # 1 hour in ms
